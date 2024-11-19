@@ -17,11 +17,11 @@ public class Panel extends JPanel implements Runnable{
 	final int originalTileSize = 16; // 16 x 16
 	final int scale = 3;
 	
-	public  int tileSize = originalTileSize * scale; // 48 x 48
-	public  int maxScreenCol = 16;
-	public  int maxScreenRow = 12;
-	public  int screenWidth = tileSize * maxScreenCol;
-	public  int screenHeight = tileSize * maxScreenRow;
+	public final int tileSize = originalTileSize * scale; // 48 x 48
+	public final int maxScreenCol = 16;
+	public final int maxScreenRow = 12;
+	public final int screenWidth = tileSize * maxScreenCol;
+	public final int screenHeight = tileSize * maxScreenRow;
 	
 	//world Settings
 	public final int maxWorldCol = 20;
@@ -35,7 +35,9 @@ public class Panel extends JPanel implements Runnable{
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler(this);
 	Thread gameThread;
+	public CollisionChecker cChecker = new CollisionChecker(this);
 	public Player player = new Player(this,keyH);
+	
 		
 	public Panel() {
 		
@@ -46,23 +48,23 @@ public class Panel extends JPanel implements Runnable{
 		this.setFocusable(true);
 	}
 	
-	public void zoomInOut(int i) {
-		
-		int oldWorldWidth = tileSize * maxWorldCol;
-		tileSize += i;
-		int newWorldWidth = tileSize * maxWorldCol;
-		
-		player.speed = (double)newWorldWidth/240;
-		
-		double multiplier = (double)newWorldWidth/oldWorldWidth;
-		
-		double newPlayerWorldX = player.worldX * multiplier;
-		double newPlayerWorldY = player.worldY * multiplier;
-		
-		player.worldX = newPlayerWorldX;
-		player.worldY = newPlayerWorldY;
-		
-	}
+//	public void zoomInOut(int i) {
+//		
+//		int oldWorldWidth = tileSize * maxWorldCol;
+//		tileSize += i;
+//		int newWorldWidth = tileSize * maxWorldCol;
+//		
+//		player.speed = (double)newWorldWidth/240;
+//		
+//		double multiplier = (double)newWorldWidth/oldWorldWidth;
+//		
+//		double newPlayerWorldX = player.worldX * multiplier;
+//		double newPlayerWorldY = player.worldY * multiplier;
+//		
+//		player.worldX = newPlayerWorldX;
+//		player.worldY = newPlayerWorldY;
+//		
+//	}
 
 	public void startGameThread() {
 		
