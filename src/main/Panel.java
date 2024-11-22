@@ -3,6 +3,7 @@ package main;
 import javax.swing.JPanel;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 import java.awt.Color;
@@ -36,35 +37,36 @@ public class Panel extends JPanel implements Runnable{
 	KeyHandler keyH = new KeyHandler(this);
 	Thread gameThread;
 	public CollisionChecker cChecker = new CollisionChecker(this);
+	public AssetSetter aSetter = new AssetSetter(this);
 	public Player player = new Player(this,keyH);
+	public SuperObject obj[] = new SuperObject[5]; //display up to 10 objects
 	
+	
+	//Game State
+	public int gameState;
+	public final int playState = 1;
+	public final int pauseState = 2;
+	
+	GameTime gameTimer = new GameTime();  // Create an instance of GameTimer
+
+    public Panel() {
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(keyH);
+        this.setFocusable(true);
+
+        // Start the timer when the game is set up
+        gameTimer.start();
+    }
+	
+	
+	public void setupGame() {
 		
-	public Panel() {
+		aSetter.setObject();
 		
-		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-		this.setBackground(Color.black);
-		this.setDoubleBuffered(true);
-		this.addKeyListener(keyH);
-		this.setFocusable(true);
+		gameState = playState;
 	}
-	
-//	public void zoomInOut(int i) {
-//		
-//		int oldWorldWidth = tileSize * maxWorldCol;
-//		tileSize += i;
-//		int newWorldWidth = tileSize * maxWorldCol;
-//		
-//		player.speed = (double)newWorldWidth/240;
-//		
-//		double multiplier = (double)newWorldWidth/oldWorldWidth;
-//		
-//		double newPlayerWorldX = player.worldX * multiplier;
-//		double newPlayerWorldY = player.worldY * multiplier;
-//		
-//		player.worldX = newPlayerWorldX;
-//		player.worldY = newPlayerWorldY;
-//		
-//	}
 
 	public void startGameThread() {
 		
@@ -106,18 +108,34 @@ public class Panel extends JPanel implements Runnable{
 	
 	public void update() {
 		
-		player.update();
+		if(gameState == playState) {
+			player.update();
+		}
+		if(gameState == pauseState) {
+			
+		}
+		
 	}
 	
 	public void paintComponent(Graphics g) {
-		
 		super.paintComponent(g);
-		
 		Graphics2D g2 = (Graphics2D)g;
 		
 		tileM.draw(g2);
 		
+		for(int i = 0; i < obj.length; i++) {
+			if(obj[i] != null) {
+				obj[i].draw(g2, this);
+			}
+		}
+		
 		player.draw(g2);
+		
+		 String timerText = "Time: " + gameTimer.getElapsedTime() + "s";
+	        g2.setColor(Color.WHITE);
+	        g2.drawString(timerText, screenWidth - 100, 30);  // Position the timer in the top-right
+
+	        g2.dispose();
 		
 		g2.dispose();
 	}
